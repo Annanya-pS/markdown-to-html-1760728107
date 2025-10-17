@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Viewer</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Marked.js and highlight.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.18/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@12.1.0/lib/core.js"></script>
+    
+    <style>
+        body {
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        pre {
+            background-color: #282c34;
+            color: #abb2bf;
+            padding: 1rem;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card p-4 bg-white">
+            <h1 class="mb-4">Markdown Viewer</h1>
+            <!-- Output Area -->
+            <div id="markdown-output"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Decode Base64 encoded markdown content
+        const markdownContent = `data:text/markdown;base64,${btoa('# Markdown Example\n\nThis is a simple markdown file with **bold** text and `inline code`.')}`;
+
+        // Fetch the markdown content and process it
+        fetch(markdownContent)
+            .then(response => response.text())
+            .then(text => {
+                // Use marked.js to convert markdown to HTML
+                document.getElementById('markdown-output').innerHTML = marked.parse(text);
+
+                // Apply syntax highlighting
+                document.querySelectorAll('pre code').forEach((block) => {
+                    hljs.highlightBlock(block);
+                });
+            })
+            .catch(error => {
+                // Error handling
+                console.error('Error loading markdown:', error);
+                document.getElementById('markdown-output').innerHTML = '<p style="color: red;">Failed to load markdown content.</p>';
+            });
+
+        // Initialize highlight.js
+        hljs.initHighlightingOnLoad();
+    </script>
+</body>
+</html>
