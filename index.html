@@ -8,26 +8,23 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
-    <!-- Marked.js and highlight.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.18/marked.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/highlight.js@12.1.0/lib/core.js"></script>
+    <!-- Marked.js for Markdown to HTML conversion -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     
     <style>
         body {
             padding: 2rem;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            color: #fff;
         }
         .card {
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
-        pre {
-            background-color: #282c34;
-            color: #abb2bf;
+        .markdown-body {
             padding: 1rem;
-            border-radius: 5px;
+            background-color: #fff;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -35,35 +32,43 @@
     <div class="container">
         <div class="card p-4 bg-white">
             <h1 class="mb-4">Markdown Viewer</h1>
-            <!-- Output Area -->
-            <div id="markdown-output"></div>
+            <p id="markdown-source-label" class="text-muted"></p>
+            <div id="content" class="markdown-body"></div>
         </div>
     </div>
     
     <script>
-        // Decode Base64 encoded markdown content
-        const markdownContent = `data:text/markdown;base64,${btoa('# Markdown Example\n\nThis is a simple markdown file with **bold** text and `inline code`.')}`;
+        document.addEventListener('DOMContentLoaded', function() {
+            const defaultMarkdown = `data:text/markdown;base64,${btoa(`# Hello, Markdown Viewer!
 
-        // Fetch the markdown content and process it
-        fetch(markdownContent)
-            .then(response => response.text())
-            .then(text => {
-                // Use marked.js to convert markdown to HTML
-                document.getElementById('markdown-output').innerHTML = marked.parse(text);
+This is a simple markdown example.
 
-                // Apply syntax highlighting
-                document.querySelectorAll('pre code').forEach((block) => {
-                    hljs.highlightBlock(block);
+- Item 1
+- Item 2
+- Item 3
+`)}`;
+            const params = new URLSearchParams(window.location.search);
+            const markdownUrl = params.get('url') || defaultMarkdown;
+            const contentElement = document.getElementById('content');
+            const sourceLabelElement = document.getElementById('markdown-source-label');
+
+            // Update source label
+            sourceLabelElement.textContent = 'Loading markdown from: ' + (params.get('url') ? markdownUrl : 'Embedded');
+
+            fetch(markdownUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(markdown => {
+                    contentElement.innerHTML = marked(markdown);
+                })
+                .catch(error => {
+                    contentElement.innerHTML = '<p class="text-danger">Error loading markdown: ' + error.message + '</p>';
                 });
-            })
-            .catch(error => {
-                // Error handling
-                console.error('Error loading markdown:', error);
-                document.getElementById('markdown-output').innerHTML = '<p style="color: red;">Failed to load markdown content.</p>';
-            });
-
-        // Initialize highlight.js
-        hljs.initHighlightingOnLoad();
+        });
     </script>
 </body>
 </html>
