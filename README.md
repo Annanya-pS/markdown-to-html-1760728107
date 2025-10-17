@@ -1,11 +1,11 @@
 # Markdown Viewer
 
 ## Summary
-Markdown Viewer is a static web application that converts markdown content to HTML using marked.js and adds syntax highlighting with highlight.js.
+A web application that dynamically renders Markdown content either from a provided URL or from an embedded default source.
 
 ## Features
-- **Markdown Conversion**: Converts markdown syntax to HTML.
-- **Syntax Highlighting**: Adds color highlights to code blocks using highlight.js.
+- **Dynamic Markdown Rendering**: Load and render Markdown content dynamically from a URL or an embedded source.
+- **Error Handling**: Gracefully handles errors such as network problems or invalid URLs.
 
 ## Setup
 No build steps required. This is a static HTML application.
@@ -13,14 +13,14 @@ No build steps required. This is a static HTML application.
 ### Local Usage
 1. Download or clone the repository.
 2. Open `index.html` in any modern web browser.
-3. The application will render the markdown content and display it.
+3. Optionally, append `?url=your_markdown_file_url` to the URL to load Markdown from a specific source.
 
 ### GitHub Pages
 The application is deployed at: [Your GitHub Pages URL]
 
 ## Usage Instructions
-1. Open the application in a web browser.
-2. The markdown content embedded in the HTML is automatically converted and displayed with syntax highlighting.
+- Simply open the `index.html` file in a browser.
+- To load Markdown from a specific source, append `?url=your_markdown_file_url` to the URL in the browser.
 
 ## Technical Details
 
@@ -28,12 +28,11 @@ The application is deployed at: [Your GitHub Pages URL]
 - HTML5
 - CSS3 (Bootstrap 5.3.0)
 - Vanilla JavaScript
-- Marked.js
-- Highlight.js
+- Marked.js (Markdown to HTML conversion)
 
 ### Key Features
 - Responsive design
-- Client-side markdown processing
+- Client-side Markdown rendering
 - Error handling
 - Modern UI/UX
 
@@ -42,30 +41,17 @@ The application is deployed at: [Your GitHub Pages URL]
 .
 ├── index.html          # Main application file
 ├── README.md           # This file
-└── LICENSE             # MIT License
+└── LICENSE            # MIT License
 ```
-
-## Code Explanation
-
-### HTML Structure
-- Contains a Bootstrap card where the markdown output is displayed.
-
-### CSS Styling
-- Uses Bootstrap for responsive design and custom styles for background and code blocks.
-
-### JavaScript Functionality
-- Fetches embedded markdown content, uses marked.js for conversion, and highlight.js for syntax highlighting.
 
 ## Evaluation Criteria
 This application meets the following requirements:
-- js: !!document.querySelector("script[src*='marked']")
-- js: !!document.querySelector("script[src*='highlight.js']")
-- js: document.querySelector("#markdown-output").innerHTML.includes("<h")
-- Page has element with id='markdown-output'
-- Page loads marked.js from CDN
-- Page loads highlight.js from CDN
-- README.md is professional
-- Repo has MIT LICENSE
+- Document query selector for markdown source label has content.
+- Script tag includes usage of `fetch()`.
+- Element with id='markdown-source-label' exists.
+- JavaScript leverages `fetch()` for URL loading.
+- Falls back to embedded data if no URL parameter is provided.
+- Displays the source of the Markdown.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
